@@ -1,29 +1,14 @@
 
-
-'''
-	def create_widgets():
-		self.button1 = Button(self,text = "yes") #one way to make buttons
-		self.button.grid()
-
-		self.button2 = Button(self)
-		self.button2.grid()
-		self.button2 configure(text = "no")		#second way
-
-		self.button3 = Button(self)				#third way
-		self.button3.grid()
-		self.button3["text"] = "submit"
-
-		
-'''
-
-
 from Tkinter import *
 import tkMessageBox
+from partycalc import *
+
+#partycalc.Class.
 root = Tk()
 
 class Application(Frame): # Create a class called 'Application' (Which inherits from the 'Frame' class)
 
-#fra
+
 
 	def __init__(self, master=None): # How to initialize the class, when created using Application()
 		Frame.__init__(self, master)	# Initialize using Frame's __init__ function
@@ -38,198 +23,164 @@ class Application(Frame): # Create a class called 'Application' (Which inherits 
 
 
    	def get_meal_type(self):
-   		selection = "you selected the option", str(self.meal_selection.get())
+   		selection = "Your meal will be ", str(self.meal_selection.get())
    		print selection
 
    	def get_location_type(self):
-   		selection = "you selected the option", str(self.location_selection.get())
+   		selection = "Your event will be held ", str(self.location_selection.get())
    		print selection
 
    	def get_service_type(self): 
-   		selection = "you selected the option", str(self.servive_selection.get())
+   		selection = "Your Food Presentation Will Be ", str(self.service_selection.get())
    		print selection
 
-   	def get_shape_type(self):
-   		selection = "you selected the option" , str(self.shape_selection.get())
-   		print selection
-
-
-	def get_round_size_type(self):
-		selection = "you selected the option" , int(self.round_size_selection.get())
+   	def get_shape_type(self):# used in conditional
+   		selection = "Your type of table will be" , str(self.shape_selection.get())
    		print selection
 
 
-	def get_rectangle_size_type(self):
-		selection = "you selected the option", int(self.rectangle_size_selection.get())
+	def get_round_size_type(self):#used in conditional
+		selection = "size" , int(self.round_size_selection.get())
    		print selection
 
-	def get_seating_space_type(self):
-		selection = "you selected the option", str(self.seating_space_selection.get())
+
+	def get_rectangle_size_type(self):#used in conditional
+		selection = "You selected the option", int(self.rectangle_size_selection.get())
+   		print selection
+
+	def get_seating_space_type(self):#used in conditional
+		selection = "Your seating space choice is", str(self.seating_space_selection.get())
 		print selection
    		
-	def get_seating_share_type(self):
-		selection = "you selected the option", str(self.seating_share_selection.get())
+	def get_seating_share_type(self):#used in conditional
+		selection = "Your seating preferance is", str(self.seating_share_selection.get())
 		print selection
+
+	    # make the next two functions print on another page what is requested(menu and seating chart), no need to print answer	
 	def get_arrangement_sug_type(self):
-		selection = "you selected the option", str(self.arrangement_selection.get())
+		selection = "", str(self.arrangement_selection.get())
 		print selection
 	def get_menu_sug_type(self):
-		selection = "you selected the option", str(self.menu_selection.get())
+		selection = "", str(self.menu_selection.get())
 		print selection
-	
-
-
    	
 
 	def create_widgets(self):
-	#GUI hellish repetition
-	# button - text- entry  -(password :code to display to another box ----find out how)
+	    #GUI hellish repetition
+	    # button - text- entry  
 
 		self.meal_selection = StringVar()
 		self.location_selection = StringVar()
-
 		self.suggestion = StringVar()
 		self.service_selection = StringVar()
 		self.shape_selection = StringVar()
 		self.round_size_selection = StringVar()		
 		self.rectangle_size_selection = StringVar()
-
 		self.seating_space_selection = StringVar()
-
 		self.seating_share_selection = StringVar()
-
-
 		self.arrangement_selection = StringVar()
 		self.menu_selection = StringVar()
+		self.color_scheme = StringVar()
+
+		self.event_occasion = StringVar()
+		self.event_guests = StringVar()
+		self.event_time = StringVar()
 
 
+		# Array of dictionaries, setting up radio buttons with labels.
+		# Each entry in the array is a dictionary with a "label" and "options"
+		# The "options" entry in the dictionary is an array with each radio button option.
+		questions = [
+			{'label': "Enter the Event Occasion", 'variable': self.event_occasion},
+			{'label': "Enter the Number of Guests Expected", 'variable': self.event_guests},
+			{'label': "Event Start and Finish Time", 'variable': self.event_time},
 
-
-
-		self.instruction = Label(self, text = "Enter the Party Occasion")
-		self.instruction.grid(row = 1, column = 0, columnspan = 2, sticky = W)
+			{'label': "Choose Meal", 
+				'options': ["Breakfast", "Brunch", "Lunch", "Dinner"], 
+				'variable': self.meal_selection, 
+				'command': self.get_meal_type
+			},
+			{'label': "Choose Location", 
+				'options': ["Indoors", "Outdoors"], 
+				'variable': self.location_selection, 
+				'command': self.get_location_type
+			},
+			{'label': "Choose Service", 
+				'options': ["Food to Table", "Buffet"], 
+				'variable': self.service_selection, 
+				'command': self.get_location_type
+			},
+			{'label': "Table Type", 
+				'options': ["Round", "Rectangle"], 
+				'variable': self.shape_selection, 
+				'command': self.get_shape_type
+			},
+			{'label': "Round sizes", 
+				'options': ["45", "60", "72"], 
+				'variable': self.round_size_selection, 
+				'command': self.get_shape_type
+			},
+			{'label': "Round sizes", 
+				'options': ["45", "60", "72"], 
+				'variable': self.shape_selection, 
+				'command': self.get_round_size_type
+			},
+			{'label': "Rectangle sizes", 
+				'options': ["72", "96", "120"], 
+				'variable': self.rectangle_size_selection, 
+				'command': self.get_rectangle_size_type
+			},
+			{'label': "Choose Seating Space", 
+				'options': ["Max", "Spacious"], 
+				'variable': self.seating_space_selection, 
+				'command': self.get_seating_space_type
+			},
+			{'label': "Will guests sit together or require private tables?", 
+				'options': ["Share", "Private"], 
+				'variable': self.seating_share_selection, 
+				'command': self.get_seating_share_type
+			},
+			{'label': "Would You Like Table Arrangment Suggestions?", 
+				'options': ["Yes", "No"], 
+				'variable': self.arrangement_selection, 
+				'command': self.get_arrangement_sug_type
+			},
+			{'label': "What is your color scheme?",
+				'variable': self.color_scheme
+			},
+			{'label': "Would You Like Menu Suggestions?", 
+				'options': ["Yes", "No"], 
+				'variable': self.menu_selection, 
+				'command': self.get_menu_sug_type
+			},
+		]
 		
-		self.password = Entry(self)
-		self.password.grid(row = 2, column = 1, sticky = W)
+		grid_row = 6
 
-		self.instruction = Label(self, text = "Enter the Number of Guests Expected")
-		self.instruction.grid(row = 4, column = 0, columnspan = 2, sticky = W)
-		
-		self.password = Entry(self)
-		self.password.grid(row = 5, column = 1, sticky = W)
-
-		self.instruction = Label(self, text = "Choose Meal")
-		self.instruction.grid(row = 7, column = 0, columnspan = 2, sticky = W)
-		
-		self.breakfast_button = Radiobutton(self, text = "Breakfast",fg = "orchid1",variable = self.meal_selection, value = "Breakfast" , command = self.get_meal_type )
-		self.breakfast_button.grid(row = 8, column = 1,columnspan = 2, sticky = E)
-		self.lunch_button = Radiobutton(self, text = "Lunch",variable = self.meal_selection, value = "lunch" , command = self.get_meal_type)
-		self.lunch_button.grid(row = 8, column = 1,columnspan = 1, sticky = W)
-		self.dinner_button = Radiobutton(self, text = "Dinner",variable = self.meal_selection, value = "dinner" , command = self.get_meal_type)
-		self.dinner_button.grid(row = 8, column = 7, columnspan = 2, sticky = W)
-		self.Brunch_button = Radiobutton(self, text = "Brunch",variable = self.meal_selection, value = "brunch" , command = self.get_meal_type)
-		self.Brunch_button.grid(row = 8, column = 10, columnspan = 12, sticky = W)
-
-		self.instruction = Label(self, text = "Input Start and Finish Time")
-		self.instruction.grid(row = 10, column = 0, columnspan = 2, sticky = W)
-		
-		self.password = Entry(self)
-		self.password.grid(row = 11, column = 1, sticky = W)
-
-		self.instruction = Label(self, text = "Choose Location")
-		self.instruction.grid(row = 13, column = 0, columnspan = 2, sticky = W)
-		
-		self.outdoor_button = Radiobutton(self, text = "Outdoor",variable = self.location_selection, value = "outdoor", command = self.get_location_type)
-		self.outdoor_button.grid(row = 14, column = 1,columnspan = 2, sticky = W)
-		self.indoor_button = Radiobutton(self, text = "Indoor",variable = self.location_selection, value = "indoor", command = self.get_location_type)
-	 	self.indoor_button.grid(row = 14, column = 1,columnspan = 2, sticky = E)
-		
-		self.submit_button = Button(self, text = "suggestion", command = self.suggestion)#try to add s button
-		self.submit_button.grid(row = 14, column = 1,columnspan = 3, sticky = W)# s button position
-		self.instruction = Label(self, text = "Choose Service")
-		self.instruction.grid(row = 16, column = 0, columnspan = 2, sticky = W)
-		
-		self.served_button= Radiobutton(self, text = "Food Served to Table",variable = self.service_selection, value = "food to table", command = self.get_service_type )
-		self.served_button.grid(row = 14, column = 1,columnspan = 1, sticky = E)
-		self.submit_button.grid(row = 17, column = 1,columnspan = 2, sticky = W)
-		self.buffet_button = Radiobutton(self, text =" Buffet Style",variable = self.service_selection, value = "buffet style" , command = self.get_service_type)
-		self.buffet_button.grid(row = 17, column = 1,columnspan = 1, sticky = E)
-
-		self.instruction = Label(self, text = "Choose Table Type")
-		self.instruction.grid(row = 19, column = 0, columnspan = 2, sticky = W)
-		
-		self.round_button = Radiobutton(self, text ="Round",variable =  self.shape_selection, value = "round" , command = self.get_shape_type )
-		self.round_button.grid(row = 20, column = 1,columnspan = 2, sticky = W)
-		self.rectangle_button = Radiobutton(self, text ="Rectangle",variable = self.shape_selection, value = "rectangle" ,command = self.get_shape_type)
-		self.rectangle_button.grid(row = 20, column = 1,columnspan = 1, sticky = E)
-
-
-		self.instruction = Label(self, text = "Choose Round Table Size")
-		self.instruction.grid(row = 22, column = 0, columnspan = 2, sticky = W)
-
-		self.fortyfive_button = Radiobutton(self, text = '45"    ',variable = self.round_size_selection, value = "45", command = self.get_round_size_type  )
-		self.fortyfive_button.grid(row = 23, column = 1,columnspan = 2, sticky = W)
-		self.sixty_button = Radiobutton(self, text = '   60"     ' ,variable = self.round_size_selection, value = "60", command = self.get_round_size_type  )
-		self.sixty_button.grid(row = 23, column = 1,columnspan = 1, sticky = E)
-		self.seventy_two_button = Radiobutton(self, text = '72"',variable = self.round_size_selection , value ="72",command = self.get_round_size_type )
-		self.seventy_two_button.grid(row = 23, column = 7, columnspan = 2, sticky = W)
-
-
-		self.instruction = Label(self, text = "Choose Rectangle Size")
-		self.instruction.grid(row = 25, column = 0, columnspan = 2, sticky = W)
-
-		self.six_button = Radiobutton(self, text = "6'     ",variable = self.rectangle_size_selection, value = 6 , command = self.get_rectangle_size_type)
-		self.six_button.grid(row = 26, column = 1,columnspan = 2, sticky = W)
-		self.seven_button = Radiobutton(self, text = "   7'",variable = self.rectangle_size_selection, value = 7, command = self.get_rectangle_size_type )
-		self.seven_button.grid(row = 26, column = 1,columnspan = 1, sticky = E)
-		self.eight_button = Radiobutton(self, text = "8'  ",variable = self.rectangle_size_selection, value =  8 , command = self.get_rectangle_size_type )
-		self.eight_button.grid(row = 26, column = 7, columnspan = 2, sticky = W)
-
-
-
-
-		self.instruction = Label(self, text = "Choose Seating Space")
-		self.instruction.grid(row = 28, column = 0, columnspan = 2, sticky = W)
-		self.max_button = Radiobutton(self, text = "Max",variable = self.seating_space_selection, value = "max", command = self.get_seating_space_type )
-		self.max_button.grid(row = 29, column = 1,columnspan = 1, sticky = E)
-		self.spacious_button = Radiobutton(self, text = "Spacious Seating",variable = self.seating_space_selection, value = "spacious seating"  , command = self.get_seating_space_type)
-		self.spacious_button.grid(row = 29, column = 1,columnspan = 1, sticky = W)
-		
-
-
-
-		self.instruction = Label(self, text = "Will Guests Share Tables?")
-		self.instruction.grid(row = 31, column = 0, columnspan = 2, sticky = W)
-		self.yes_button = Radiobutton(self, text = "Yes",variable = self.seating_share_selection, value = "yes", command = self.get_seating_share_type )
-		self.yes_button.grid(row = 32, column = 1,columnspan = 2, sticky = W)
-		self.no_button = Radiobutton(self, text = "No",variable = self.seating_share_selection, value = "no", command = self.get_seating_share_type )
-		self.no_button.grid(row = 32, column = 1,columnspan = 1, sticky = E)		
-
-		self.instruction = Label(self, text = "Would You Like Table Arrangment Suggestions?")
-		self.instruction.grid(row = 34, column = 0, columnspan = 2, sticky = W)
-		self.yes2_button = Radiobutton(self, text = "Yes",variable = self.arrangement_selection, value = "yes", command = self.get_arrangement_sug_type )
-		self.yes2_button.grid(row = 35, column = 1,columnspan = 2, sticky = W)
-		self.no_button = Radiobutton(self, text = "No",variable = self.arrangement_selection, value = "no" , command = self.get_arrangement_sug_type )
-		self.no_button.grid(row = 35, column = 1,columnspan = 1, sticky = E)
-
-		self.instruction = Label(self, text = "Input Your Two Major Color Theme")
-		self.instruction.grid(row = 37, column = 0, columnspan = 2, sticky = W)
-		self.password = Entry(self)
-		self.password.grid(row = 38, column = 1, sticky = W)
-
-		self.instruction = Label(self, text = "Would You Like Menu Suggestions?")
-		self.instruction.grid(row = 40, column = 0, columnspan = 2, sticky = W)
-
-		self.yes3_button = Radiobutton(self, text = "Yes",variable = self.menu_selection, value = "yes", command = self.get_menu_sug_type )
-		self.yes3_button.grid(row = 41, column = 1,columnspan = 2, sticky = W)
-		self.no3_button = Radiobutton(self, text = "No",variable = self.menu_selection, value = "no", command = self.get_menu_sug_type )
-		self.no3_button.grid(row = 41, column = 1,columnspan = 1, sticky = E)
+		for entry in questions:
+			grid_row += 1 # Move down a row, then create the label
+			Label(self, text=entry['label']).grid(row = grid_row, column = 0, columnspan = 3, sticky = W)
+			grid_row += 1 # Move down a row and put the options.
+			grid_column = 1 # Options start on column 1
+			# If the dictionary has 'options', it's a radio button
+			if 'options' in entry:
+				for option in entry['options']:
+					#First create the radio button
+					btn = Radiobutton(self, text=option, value = option, variable = entry['variable'], command=entry['command'])
+					# Then place the radio button on the grid
+					btn.grid(row = grid_row, column = grid_column, sticky = W) 
+					# If this is the first option, make it the default.
+					if grid_column == 1:
+						btn.select() 
+					# Finally, move to the next column so we're ready for the next option
+					grid_column += 1 
+			# Otherwise, if the dictionary has no 'options', it's an Entry
+			else: 
+				Entry(self, textvariable = entry['variable']).grid(row = grid_row, column = grid_column, columnspan = 2, sticky = W)
 
 		self.submit_button = Button(self, text ="Print Report", bg = "pink", command = self.reveal)
-		self.submit_button.grid(row = 44, column = 0, sticky = W)
+		self.submit_button.grid(row = grid_row + 1, column = 0, sticky = W)
 
-		self.text = Text(self, width = 35, height = 5, wrap = WORD)
-		self.text.grid(row = 45, column = 0, columnspan = 2, sticky = W)
 
 
 	def reveal(self):
@@ -248,31 +199,33 @@ class Application(Frame): # Create a class called 'Application' (Which inherits 
 		Frame.__init__(self, master)
 		self.grid()
 		self.create_widgets()		
-		#self.configure(background = 'orchid1')backround nightmare
+		#self.configure(background = 'orchid1')#backround nightmare
 
 
 def main():
 	
 	root.title("Party Planner")	
-	root.geometry("1024x768")# sets size of window
+	root.geometry("575x768")# sets size of window
 	root.configure(background = 'orchid1')
 	app = Application(root)
 	
-	root.mainloop()
-	
-				#(backround = "pink")
-	
-
+	root.mainloop() #Tkinter loop that runs all the time to make graphic stay up
 	
 
 if __name__ == '__main__':
     main()
-
-#class Food(object):#make later
  	
-
 '''
-	      
+	def create_widgets():
+		self.button1 = Button(self,text = "yes") #one way to make buttons
+		self.button.grid()
+
+		self.button2 = Button(self)
+		self.button2.grid()
+		self.button2 configure(text = "no")		#second way
+
+		self.button3 = Button(self)				#third way
+		self.button3.grid()      
     def __init__(self, master):
 
         # creates a label
@@ -314,35 +267,16 @@ if __name__ == '__main__':
 
 	'''
  
-
-		
-
-
+# Future feature functions to expand on listed below:
 # report include buffet servers or not
 # report include waiters and waitress qty
 # report include kitchen workers qty
-
-# create food class
-
- 
-
-#method to pick menu which then translates and prints shopping list on report
-
-
-#method to add menus and recipe in dictionary from class? and print menu (not recipie) in report
-
-
-'''
-
-
+# create food class 
+# method to pick menu which then translates and prints shopping list on report
+# method to add menus and recipe in dictionary from class,and print info as desired in report
 # food method to calculate portions /qty of food to purchase/ per number of people from food class and party class or decide if both classes should be one class
-
 # creat shopping list print out from food class and menu picked
-
 # create function food helpers/ employees/ volunteers tracker: direct to google virtual sign up and live communications.
-
 # create final print out which displays tables and chairs and side tables pattern, and  color, text of what is needed , time factors for set up and menue- three pages one final visual of set up and on page for menue and one instructional
-
 # create method for food class enter your own menu
-
-'''
+# future rewrite in html css and javascript
