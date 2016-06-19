@@ -8,14 +8,12 @@ root = Tk()
 
 class Application(Frame): # Create a class called 'Application' (Which inherits from the 'Frame' class)
 
-
-
 	def __init__(self, master=None): # How to initialize the class, when created using Application()
 		Frame.__init__(self, master)	# Initialize using Frame's __init__ function
 		self.parent = master			# Set the parent variable to the optional value master
 		
 	def make_color(self):
-		 self.configure(background = 'orchid1') #Too ugly, don't use.
+		self.configure(background = 'orchid1') #Too ugly, don't use.
 
 
 	def suggestion(self):#addded for suggestion botton pop-up
@@ -36,16 +34,24 @@ class Application(Frame): # Create a class called 'Application' (Which inherits 
 
    	def get_shape_type(self):# used in conditional
    		selection = "Your type of table will be" , str(self.shape_selection.get())
+   		print self.survey_elements
+   		# This code toggles the disabled state of some of the buttons.
+   		if self.shape_selection.get() == "Round":
+   			for item in self.survey_elements[8]:
+   				print item
+   				item.configure(state = "disabled")
+   			for item in self.survey_elements[7]:
+   				item.configure(state = "normal")
+   		else:
+   			for item in self.survey_elements[7]:
+   				item.configure(state = "disabled")
+   			for item in self.survey_elements[8]:
+   				item.configure(state = "normal")
    		print selection
 
 
 	def get_round_size_type(self):#used in conditional
 		selection = "size" , int(self.round_size_selection.get())
-   		print selection
-
-
-	def get_rectangle_size_type(self):#used in conditional
-		selection = "You selected the option", int(self.rectangle_size_selection.get())
    		print selection
 
 	def get_seating_space_type(self):#used in conditional
@@ -87,9 +93,9 @@ class Application(Frame): # Create a class called 'Application' (Which inherits 
 		self.event_time = StringVar()
 
 
-		# Array of dictionaries, setting up radio buttons with labels.
-		# Each entry in the array is a dictionary with a "label" and "options"
-		# The "options" entry in the dictionary is an array with each radio button option.
+		# List of dictionaries, setting up radio buttons with labels.
+		# Each entry in the list is a dictionary with a "label" and "options"
+		# The "options" entry in the dictionary is an list with each radio button option.
 		questions = [
 			{'label': "Enter the Event Occasion", 'variable': self.event_occasion},
 			{'label': "Enter the Number of Guests Expected", 'variable': self.event_guests},
@@ -120,15 +126,10 @@ class Application(Frame): # Create a class called 'Application' (Which inherits 
 				'variable': self.round_size_selection, 
 				'command': self.get_shape_type
 			},
-			{'label': "Round sizes", 
-				'options': ["45", "60", "72"], 
-				'variable': self.shape_selection, 
-				'command': self.get_round_size_type
-			},
 			{'label': "Rectangle sizes", 
-				'options': ["72", "96", "120"], 
+				'options': ["6ft", "8ft", ], 
 				'variable': self.rectangle_size_selection, 
-				'command': self.get_rectangle_size_type
+				'command': self.get_shape_type
 			},
 			{'label': "Choose Seating Space", 
 				'options': ["Max", "Spacious"], 
@@ -155,29 +156,43 @@ class Application(Frame): # Create a class called 'Application' (Which inherits 
 			},
 		]
 		
-		grid_row = 6
+		grid_row = 0
 
+		self.survey_elements = []
+
+		# This section creates the gui.
 		for entry in questions:
+			survey_array = []
 			grid_row += 1 # Move down a row, then create the label
-			Label(self, text=entry['label']).grid(row = grid_row, column = 0, columnspan = 3, sticky = W)
+
+			lbl = Label(self,background = 'orchid1', text=entry['label'])
+			lbl.grid(row = grid_row, column = 0, columnspan = 3, sticky = W)
+			survey_array.append(lbl)
 			grid_row += 1 # Move down a row and put the options.
 			grid_column = 1 # Options start on column 1
 			# If the dictionary has 'options', it's a radio button
+
 			if 'options' in entry:
 				for option in entry['options']:
 					#First create the radio button
-					btn = Radiobutton(self, text=option, value = option, variable = entry['variable'], command=entry['command'])
+					btn = Radiobutton(self, text=option, value = option, background = 'orchid1', variable = entry['variable'], command=entry['command'])
+					survey_array.append(btn)
+	
 					# Then place the radio button on the grid
 					btn.grid(row = grid_row, column = grid_column, sticky = W) 
 					# If this is the first option, make it the default.
 					if grid_column == 1:
-						btn.select() 
+						btn.select() # This WAS how we made a line default
 					# Finally, move to the next column so we're ready for the next option
 					grid_column += 1 
 			# Otherwise, if the dictionary has no 'options', it's an Entry
 			else: 
 				Entry(self, textvariable = entry['variable']).grid(row = grid_row, column = grid_column, columnspan = 2, sticky = W)
 
+			#Store references in list.
+			self.survey_elements.append(survey_array)
+
+		# Now that the questions are set up, add a button for printing the report.
 		self.submit_button = Button(self, text ="Print Report", bg = "pink", command = self.reveal)
 		self.submit_button.grid(row = grid_row + 1, column = 0, sticky = W)
 
@@ -205,9 +220,10 @@ class Application(Frame): # Create a class called 'Application' (Which inherits 
 def main():
 	
 	root.title("Party Planner")	
-	root.geometry("575x768")# sets size of window
+	root.geometry("1024x768")# sets size of window
 	root.configure(background = 'orchid1')
 	app = Application(root)
+	app.configure(background = 'orchid1')
 	
 	root.mainloop() #Tkinter loop that runs all the time to make graphic stay up
 	
