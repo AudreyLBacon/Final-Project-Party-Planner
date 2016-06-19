@@ -2,6 +2,7 @@
 from Tkinter import *
 import tkMessageBox
 from partycalc import *
+import tkFont
 
 #partycalc.Class.
 root = Tk()
@@ -11,30 +12,51 @@ class Application(Frame): # Create a class called 'Application' (Which inherits 
 	def __init__(self, master=None): # How to initialize the class, when created using Application()
 		Frame.__init__(self, master)	# Initialize using Frame's __init__ function
 		self.parent = master			# Set the parent variable to the optional value master
-		
+
+
 	def make_color(self):
-		self.configure(background = 'orchid1') #Too ugly, don't use.
+		self.configure(background = 'orchid1') 
 
 
-	def suggestion(self):#addded for suggestion botton pop-up
+	def suggestion(self): # Expand later -add suggestion botton pop-up 
    		self.tkMessageBox.showinfo( "Party Planner", "text stuff")#addded for suggestion
 
 
-   	def get_meal_type(self):
-   		selection = "Your meal will be ", str(self.meal_selection.get())
-   		print selection
 
-   	def get_location_type(self):
-   		selection = "Your event will be held ", str(self.location_selection.get())
-   		print selection
+   	def	calculate(self):
+   		calculator = None
+   		if self.shape_selection.get() == "Round":
+   			calculator = PartyCalc(self.num_guests,"Round",self.round_size_selection.get(),self.seating_space_selection.get())
+   		else:
+   			calculator = PartyCalc(self.num_guests,"Rectangle",self.rectangle_size_selection.get(),self.seating_space_selection.get())
 
-   	def get_service_type(self): 
-   		selection = "Your Food Presentation Will Be ", str(self.service_selection.get())
-   		print selection
+   		text = "Occasion: " + self.event_occasion.get() + "\n"
+   		text += "Meal: " + self.meal_selection.get() + "\n"
+   		text += "Location: " + self.location_selection.get() + "\n"
+   		text += "Service: " + self.service_selection.get() + "\n"
+   		text += "Hours: " + self.event_time.get() + "\n"
+   		if self.shape_selection.get() == "Round":
+   			text += "Table Type: " + self.round_size_selection.get() + " " + self.shape_selection.get() + "\n"
+   		else:
+   			text += "Table Type: " + self.rectangle_size_selection.get() + " " + self.shape_selection.get() + "\n"
 
-   	def get_shape_type(self):# used in conditional
-   		selection = "Your type of table will be" , str(self.shape_selection.get())
-   		print self.survey_elements
+   		text += "Private Tables: " + self.seating_share_selection.get() + "\n"
+   		text += "Seating: " + self.seating_space_selection.get() + "\n"
+		text += "Color Scheme: " + self.color_scheme.get() + "\n"
+   		text += "Need menu suggestions: " + self.menu_selection.get() + "\n"
+   		text += calculator.calculate()
+   		self.update_output(text)
+   		return True
+
+	def validate_guests(self):
+		try:
+			self.num_guests = int(self.event_guests.get())
+		except ValueError:
+			self.num_guests = 0
+		self.calculate()
+		return True
+		
+   	def get_shape_type(self):
    		# This code toggles the disabled state of some of the buttons.
    		if self.shape_selection.get() == "Round":
    			for item in self.survey_elements[8]:
@@ -47,34 +69,18 @@ class Application(Frame): # Create a class called 'Application' (Which inherits 
    				item.configure(state = "disabled")
    			for item in self.survey_elements[8]:
    				item.configure(state = "normal")
-   		print selection
+   		self.calculate()
 
-
-	def get_round_size_type(self):#used in conditional
-		selection = "size" , int(self.round_size_selection.get())
-   		print selection
-
-	def get_seating_space_type(self):#used in conditional
-		selection = "Your seating space choice is", str(self.seating_space_selection.get())
-		print selection
-   		
-	def get_seating_share_type(self):#used in conditional
-		selection = "Your seating preferance is", str(self.seating_share_selection.get())
-		print selection
-
-	    # make the next two functions print on another page what is requested(menu and seating chart), no need to print answer	
-	def get_arrangement_sug_type(self):
-		selection = "", str(self.arrangement_selection.get())
-		print selection
-	def get_menu_sug_type(self):
-		selection = "", str(self.menu_selection.get())
-		print selection
-   	
+   	def update_output(self, output):
+   		self.label_output.configure(text = output)
 
 	def create_widgets(self):
-	    #GUI hellish repetition
-	    # button - text- entry  
-
+		self.num_guests = 0
+		self.grid()
+		self.survey_frame = Frame(self, bg = "orchid1")
+		self.survey_frame.grid(row=0,column=0, sticky = N+W+S)
+		self.result_frame = Frame(self, bg = "orchid1")
+		self.result_frame.grid(row=0,column=1)
 		self.meal_selection = StringVar()
 		self.location_selection = StringVar()
 		self.suggestion = StringVar()
@@ -92,29 +98,28 @@ class Application(Frame): # Create a class called 'Application' (Which inherits 
 		self.event_guests = StringVar()
 		self.event_time = StringVar()
 
-
 		# List of dictionaries, setting up radio buttons with labels.
 		# Each entry in the list is a dictionary with a "label" and "options"
-		# The "options" entry in the dictionary is an list with each radio button option.
+		# The "options" entry in the dictionary is a list with each radio button option.
 		questions = [
 			{'label': "Enter the Event Occasion", 'variable': self.event_occasion},
-			{'label': "Enter the Number of Guests Expected", 'variable': self.event_guests},
+			{'label': "Enter the Number of Guests Expected", 'variable': self.event_guests, 'command': self.validate_guests},
 			{'label': "Event Start and Finish Time", 'variable': self.event_time},
 
 			{'label': "Choose Meal", 
 				'options': ["Breakfast", "Brunch", "Lunch", "Dinner"], 
 				'variable': self.meal_selection, 
-				'command': self.get_meal_type
+				'command': self.calculate
 			},
 			{'label': "Choose Location", 
 				'options': ["Indoors", "Outdoors"], 
 				'variable': self.location_selection, 
-				'command': self.get_location_type
+				'command': self.calculate
 			},
 			{'label': "Choose Service", 
 				'options': ["Food to Table", "Buffet"], 
 				'variable': self.service_selection, 
-				'command': self.get_location_type
+				'command': self.calculate
 			},
 			{'label': "Table Type", 
 				'options': ["Round", "Rectangle"], 
@@ -122,7 +127,7 @@ class Application(Frame): # Create a class called 'Application' (Which inherits 
 				'command': self.get_shape_type
 			},
 			{'label': "Round sizes", 
-				'options': ["45", "60", "72"], 
+				'options': ["48", "60", "72"], 
 				'variable': self.round_size_selection, 
 				'command': self.get_shape_type
 			},
@@ -134,25 +139,26 @@ class Application(Frame): # Create a class called 'Application' (Which inherits 
 			{'label': "Choose Seating Space", 
 				'options': ["Max", "Spacious"], 
 				'variable': self.seating_space_selection, 
-				'command': self.get_seating_space_type
+				'command': self.calculate
 			},
 			{'label': "Will guests sit together or require private tables?", 
 				'options': ["Share", "Private"], 
 				'variable': self.seating_share_selection, 
-				'command': self.get_seating_share_type
+				'command': self.calculate
 			},
 			{'label': "Would You Like Table Arrangment Suggestions?", 
 				'options': ["Yes", "No"], 
 				'variable': self.arrangement_selection, 
-				'command': self.get_arrangement_sug_type
+				'command': self.calculate
 			},
 			{'label': "What is your color scheme?",
-				'variable': self.color_scheme
+				'variable': self.color_scheme,
+				'command': self.calculate
 			},
 			{'label': "Would You Like Menu Suggestions?", 
 				'options': ["Yes", "No"], 
 				'variable': self.menu_selection, 
-				'command': self.get_menu_sug_type
+				'command': self.calculate
 			},
 		]
 		
@@ -164,8 +170,8 @@ class Application(Frame): # Create a class called 'Application' (Which inherits 
 		for entry in questions:
 			survey_array = []
 			grid_row += 1 # Move down a row, then create the label
-
-			lbl = Label(self,background = 'orchid1', text=entry['label'])
+			
+			lbl = Label(self.survey_frame,background = 'orchid1', text=entry['label'])
 			lbl.grid(row = grid_row, column = 0, columnspan = 3, sticky = W)
 			survey_array.append(lbl)
 			grid_row += 1 # Move down a row and put the options.
@@ -175,7 +181,7 @@ class Application(Frame): # Create a class called 'Application' (Which inherits 
 			if 'options' in entry:
 				for option in entry['options']:
 					#First create the radio button
-					btn = Radiobutton(self, text=option, value = option, background = 'orchid1', variable = entry['variable'], command=entry['command'])
+					btn = Radiobutton(self.survey_frame, text=option, value = option, background = 'orchid1', variable = entry['variable'], command=entry['command'])
 					survey_array.append(btn)
 	
 					# Then place the radio button on the grid
@@ -187,16 +193,25 @@ class Application(Frame): # Create a class called 'Application' (Which inherits 
 					grid_column += 1 
 			# Otherwise, if the dictionary has no 'options', it's an Entry
 			else: 
-				Entry(self, textvariable = entry['variable']).grid(row = grid_row, column = grid_column, columnspan = 2, sticky = W)
+				if 'command' in entry:
+					ent = Entry(self.survey_frame, textvariable = entry['variable'], validatecommand = entry['command'], validate = 'focus')
+					ent.grid(row = grid_row, column = grid_column, columnspan = 2, sticky = W)
+				else:
+					ent = Entry(self.survey_frame, textvariable = entry['variable'])
+					ent.grid(row = grid_row, column = grid_column, columnspan = 2, sticky = W)
 
 			#Store references in list.
 			self.survey_elements.append(survey_array)
 
 		# Now that the questions are set up, add a button for printing the report.
-		self.submit_button = Button(self, text ="Print Report", bg = "pink", command = self.reveal)
+
+
+		self.submit_button = Button(self.survey_frame, text ="Print Report", bg = "pink", command = self.reveal)
 		self.submit_button.grid(row = grid_row + 1, column = 0, sticky = W)
 
-
+		label_font = tkFont.Font(family='Arial', size=18)
+		self.label_output = Label(self.result_frame, font=label_font, text="Please fill out your choices so that we can calculate the result.")
+		self.label_output.grid(row = 3, column = 5, sticky = E)
 
 	def reveal(self):
 		#display based on what you input in input box, and shown in the other section - create later
@@ -223,6 +238,7 @@ def main():
 	root.geometry("1024x768")# sets size of window
 	root.configure(background = 'orchid1')
 	app = Application(root)
+
 	app.configure(background = 'orchid1')
 	
 	root.mainloop() #Tkinter loop that runs all the time to make graphic stay up

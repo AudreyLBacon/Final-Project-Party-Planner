@@ -1,29 +1,20 @@
 import math
- #create calculater method: calculates number of chairs, table, and tables needed .
+ #create calculater method: calculates number of chairs, table, and tables needed based on guest number and ssome of the suggestions and print reports.
 	
     
-class PartyCalc(object):
-	def __init__(self):
-		self.tablesize = 0
+class PartyCalc(object):   #find out how to connect the answers/button into here from finalproject.py
+	def __init__(self, guests, tableshape, tablesize, seating):
+		self.tablesize = tablesize
 		self.new_chair_qty = 0
-		self.total_tables = 0
-		self.guests = 0
-		self.seating = 0
+		self.total_tables = 0 
+		self.tableshape = tableshape        
+		self.guests = int(guests)
+		self.seating = seating
 		self.table_pattern = 0
 		self.tables = 0
 
-	def calculate(self):
-
-		if  self.tablesize == 72 and self.seating == "Max":
-			new_chair_qty = 10 
-			total_tables = math.ceil(self.guests / 10.0)
-			print "Total tables needed is" , total_tables, "and total chairs needed is ",  new_chair_qty * total_tables, "with 10 chairs per table"
-		
-		elif self.tablesize == 60 and self.seating != "Max":
-			new_chair_qty = 6 
-			total_tables = math.ceil(self.guests / 6.0)
-			print "Total tables needed is" , total_tables, "and total chairs needed is ",  new_chair_qty * total_tables, "with 6 chairs per table"
-		elif self.tableshape == "Combination" : #does not work right now
+		'''
+			elif self.tableshape == "combination" : 
 			rectangle_combo_qty_tables = raw_input(" How many rectangle tables?")
 			round_combo_qty_tables = raw_input("How many round tables ") #button input integers
 			
@@ -33,18 +24,34 @@ class PartyCalc(object):
 					print " total tables needed are ", total_combo_tables, "with", reqtangle_combo_qty, "reqtangle tables and", round_combo_qty, "round tables and."
 			elif self.tablesize == 72:
 					print " total tables needed are ", total_combo_tables, "with", reqtangle_combo_qty, "reqtangle tables and ", round_combo_qty, "round tables and .", (round_combo_qty * 8 ) +  6 
-		elif self.tablesize == 72 and self.seating != "Max"  or self.tablesize == 60 and self.seating == "Max":
+		'''
+		
+
+	def calculate(self):
+		new_chair_qty = 10
+
+		if  self.tablesize == "72" and self.seating == "Max" or self.tablesize == "8ft":
+			new_chair_qty = 10 
+			total_tables = int(math.ceil(self.guests / 10.0))
+		
+		elif self.tablesize == "60" and self.seating != "Max" or self.tablesize == "48" and self.seating == "Max":
+			new_chair_qty = 6 
+			total_tables = int(math.ceil(self.guests / 6.0))
+		elif self.tablesize == "72" and self.seating != "Max" or self.tablesize == "60" and self.seating == "Max" or self.tablesize == "6ft":
 			new_chair_qty = 8 
-			total_tables = math.ceil(self.guests / 8.0)
-			print "Total tables needed is" , total_tables, "and total chairs needed is ",  new_chair_qty * total_tables ,"with 8 chairs per table"
-
-			#print " total tables needed are ", total_combo_tables, "with", reqtangle_combp_qty, "reqtangle tables and", round_combo_qty, "round tables."
-				
-
-		# redirect to page asking qty for each next to rectangle and round button.
-			#new_chair_qty = rectangle_qty
+			total_tables = int(math.ceil(self.guests / 8.0))
+		elif self.tablesize == "48" and self.seating != "Max":
+			new_chair_qty = 4
+			total_tables = int(math.ceil(self.guests / 4.0))
 		else:
-			print " Somthings wrong here "	
+			return "Somethings wrong here!"
+
+		textvar = "Expected Guests: " + str(self.guests) + "\n"
+		textvar += "Total tables needed is " + str(total_tables) + "\n" 
+		textvar += "Total chairs needed is " + str(new_chair_qty * total_tables) + " with " +  str(new_chair_qty) + " chairs per table\n"
+		textvar += "You will have " + str((new_chair_qty * total_tables) - self.guests) + " extra spaces."
+		
+		return textvar
         
 	def	pattern_and_color(self):#generate sample configs of pattern and color in report.
 	 # info taken from  def questions  and def calc functions and using variables from class
@@ -104,7 +111,7 @@ class PartyCalc(object):
 
 # Main code, runs only when the file is executed from the terminal, not imported.
 if __name__ == '__main__':
-	pc = PartyCalc()
+	pc = PartyCalc(0,0,0)
 	pc.ask_questions() #calling the method ask_questions
 	pc.calculate() # calling the method calculate
 	pc.pattern_and_color() # 
