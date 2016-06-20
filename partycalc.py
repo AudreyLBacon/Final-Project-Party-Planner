@@ -49,7 +49,7 @@ class PartyCalc(object):   #find out how to connect the answers/button into here
 		textvar = "Expected Guests: " + str(self.guests) + "\n"
 		textvar += "Total tables needed is " + str(total_tables) + "\n" 
 		textvar += "Total chairs needed is " + str(new_chair_qty * total_tables) + " with " +  str(new_chair_qty) + " chairs per table\n"
-		textvar += "You will have " + str((new_chair_qty * total_tables) - self.guests) + " extra spaces."
+		textvar += "You will have " + str((new_chair_qty * total_tables) - self.guests) + " extra table spaces and chairs."
 		
 		return textvar
         
@@ -111,7 +111,7 @@ class PartyCalc(object):   #find out how to connect the answers/button into here
 
 # Main code, runs only when the file is executed from the terminal, not imported.
 if __name__ == '__main__':
-	pc = PartyCalc(0,0,0)
+	pc = PartyCalc(0,0,0,0)
 	pc.ask_questions() #calling the method ask_questions
 	pc.calculate() # calling the method calculate
 	pc.pattern_and_color() # 

@@ -7,7 +7,7 @@ import tkFont
 #partycalc.Class.
 root = Tk()
 
-class Application(Frame): # Create a class called 'Application' (Which inherits from the 'Frame' class)
+class Application(Frame): # Create a class called 'Application' (Which inherits from the 'Frame' class)#frame is a Tkinter thing for layout that holds everything
 
 	def __init__(self, master=None): # How to initialize the class, when created using Application()
 		Frame.__init__(self, master)	# Initialize using Frame's __init__ function
@@ -44,6 +44,7 @@ class Application(Frame): # Create a class called 'Application' (Which inherits 
    		text += "Seating: " + self.seating_space_selection.get() + "\n"
 		text += "Color Scheme: " + self.color_scheme.get() + "\n"
    		text += "Need menu suggestions: " + self.menu_selection.get() + "\n"
+   		text += "Need table arrangement suggestions: " + self.arrangement_selection.get() + "\n"
    		text += calculator.calculate()
    		self.update_output(text)
    		return True
@@ -167,7 +168,7 @@ class Application(Frame): # Create a class called 'Application' (Which inherits 
 		self.survey_elements = []
 
 		# This section creates the gui.
-		for entry in questions:
+		for entry in questions: # for loop
 			survey_array = []
 			grid_row += 1 # Move down a row, then create the label
 			
@@ -209,9 +210,9 @@ class Application(Frame): # Create a class called 'Application' (Which inherits 
 		self.submit_button = Button(self.survey_frame, text ="Print Report", bg = "pink", command = self.reveal)
 		self.submit_button.grid(row = grid_row + 1, column = 0, sticky = W)
 
-		label_font = tkFont.Font(family='Arial', size=18)
+		label_font = tkFont.Font(family='Arial', size=18)# block for report
 		self.label_output = Label(self.result_frame, font=label_font, text="Please fill out your choices so that we can calculate the result.")
-		self.label_output.grid(row = 3, column = 5, sticky = E)
+		self.label_output.grid(row = 2, column = 5, sticky = E)
 
 	def reveal(self):
 		#display based on what you input in input box, and shown in the other section - create later
@@ -234,10 +235,11 @@ class Application(Frame): # Create a class called 'Application' (Which inherits 
 
 def main():
 	
-	root.title("Party Planner")	
+	root.title("Party Planner")	# set the title of the window
 	root.geometry("1024x768")# sets size of window
 	root.configure(background = 'orchid1')
-	app = Application(root)
+	app = Application(root)# creates an instance of AppMain which has all the other widgets
+                                          # which will show up on the root_widget
 
 	app.configure(background = 'orchid1')
 	
