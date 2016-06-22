@@ -4,7 +4,7 @@ import tkMessageBox
 from partycalc import *
 import tkFont
 
-#partycalc.Class.
+#partycalc.Class.     
 root = Tk()
 
 class Application(Frame): # Create a class called 'Application' (Which inherits from the 'Frame' class)#frame is a Tkinter thing for layout that holds everything
@@ -24,17 +24,26 @@ class Application(Frame): # Create a class called 'Application' (Which inherits 
 
 
    	def	calculate(self):
-   		calculator = None
-   		if self.shape_selection.get() == "Round":
-   			calculator = PartyCalc(self.num_guests,"Round",self.round_size_selection.get(),self.seating_space_selection.get())
-   		else:
-   			calculator = PartyCalc(self.num_guests,"Rectangle",self.rectangle_size_selection.get(),self.seating_space_selection.get())
+   		# Step One: Take the input from the GUI and put it into the party calculator.
 
+   		party_calculator = None # Create an empty variable for use later. "None" means it's nothing yet.
+   		if self.shape_selection.get() == "Round":  # Get if they picked "Round" or "Rectangle" from the GUI
+   			# If they picked round, create a calculator from the PartyCalc class using the round size.
+   			party_calculator = PartyCalc(self.num_guests,"Round",self.round_size_selection.get(),self.seating_space_selection.get())
+   		else:
+   			# If they picked rectangle, create a calculator using the rectangle size.
+   			party_calculator = PartyCalc(self.num_guests,"Rectangle",self.rectangle_size_selection.get(),self.seating_space_selection.get())
+
+   		# Step Two: This moves the input from the gui questions into the report window.
+   		# This part only handles the questions that don't require math to answer.
    		text = "Occasion: " + self.event_occasion.get() + "\n"
-   		text += "Meal: " + self.meal_selection.get() + "\n"
-   		text += "Location: " + self.location_selection.get() + "\n"
+   		# Plus-equals is short for: text = text + "More text". Start with what's already there, then add more.
+   		text += "Meal: " + self.meal_selection.get() + "\n" 
+   		text += "Location: " + self.location_selection.get() + "\n" 
    		text += "Service: " + self.service_selection.get() + "\n"
    		text += "Hours: " + self.event_time.get() + "\n"
+
+   		# Find out which shape, so we know which size to print.
    		if self.shape_selection.get() == "Round":
    			text += "Table Type: " + self.round_size_selection.get() + " " + self.shape_selection.get() + "\n"
    		else:
@@ -43,22 +52,25 @@ class Application(Frame): # Create a class called 'Application' (Which inherits 
    		text += "Private Tables: " + self.seating_share_selection.get() + "\n"
    		text += "Seating: " + self.seating_space_selection.get() + "\n"
 		text += "Color Scheme: " + self.color_scheme.get() + "\n"
-   		text += "Need menu suggestions: " + self.menu_selection.get() + "\n"
-   		text += "Need table arrangement suggestions: " + self.arrangement_selection.get() + "\n"
-   		text += calculator.calculate()
-   		self.update_output(text)
-   		return True
+   		text += "Menu set up instructions included: " + self.menu_selection.get() + "\n"
+   		text += "Table arrangement instructions included: " + self.arrangement_selection.get() + "\n"
+   		
+		# Last Step: Calls the calculate() method on the PartyCalc class.
+   		text += party_calculator.calculate()  # Calculate
+   		self.label_output.configure(text = text)  # Send the text to the report Label on the gui.
 
+   	# This method reads the number of guests from the GUI and then saves it as an Integer.
 	def validate_guests(self):
-		try:
+		try: # Try to make it an int...
 			self.num_guests = int(self.event_guests.get())
-		except ValueError:
+		except ValueError: # But if it crashes, just use 0.
 			self.num_guests = 0
+		# After the user types a number of guests, call calculate() method to recalculate.
 		self.calculate()
 		return True
 		
+	# This code disables the round sizes when the user picks rectangle, and vice versa.
    	def get_shape_type(self):
-   		# This code toggles the disabled state of some of the buttons.
    		if self.shape_selection.get() == "Round":
    			for item in self.survey_elements[8]:
    				print item
@@ -72,17 +84,19 @@ class Application(Frame): # Create a class called 'Application' (Which inherits 
    				item.configure(state = "normal")
    		self.calculate()
 
-   	def update_output(self, output):
-   		self.label_output.configure(text = output)
-
+   	# This function creates the GUI widgets.
 	def create_widgets(self):
 		self.num_guests = 0
 		self.grid()
-		self.survey_frame = Frame(self, bg = "orchid1")
-		self.survey_frame.grid(row=0,column=0, sticky = N+W+S)
-		self.result_frame = Frame(self, bg = "orchid1")
-		self.result_frame.grid(row=0,column=1)
-		self.meal_selection = StringVar()
+		# Step One: Divide the screen into two halfs and color them. 
+		self.survey_frame = Frame(self, bg = "orchid1")  # This frame has the survey questions
+		self.survey_frame.grid(row=0,column=0, sticky = N+W+S) # Tells the GUI where on the screen to show the survey section
+		
+		self.result_frame = Frame(self, bg = "orchid1") # Thhidis frame has the results.
+		self.result_frame.grid(row=0,column=1) # Tells the GUI where on the screen to show the results
+
+		# StringVar is a class used by Tkinter to store strings for the GUI.
+		self.meal_selection = StringVar() 
 		self.location_selection = StringVar()
 		self.suggestion = StringVar()
 		self.service_selection = StringVar()
@@ -106,7 +120,6 @@ class Application(Frame): # Create a class called 'Application' (Which inherits 
 			{'label': "Enter the Event Occasion", 'variable': self.event_occasion},
 			{'label': "Enter the Number of Guests Expected", 'variable': self.event_guests, 'command': self.validate_guests},
 			{'label': "Event Start and Finish Time", 'variable': self.event_time},
-
 			{'label': "Choose Meal", 
 				'options': ["Breakfast", "Brunch", "Lunch", "Dinner"], 
 				'variable': self.meal_selection, 
@@ -147,16 +160,16 @@ class Application(Frame): # Create a class called 'Application' (Which inherits 
 				'variable': self.seating_share_selection, 
 				'command': self.calculate
 			},
-			{'label': "Would You Like Table Arrangment Suggestions?", 
+			{'label': "Table Arrangment instruction included?", 
 				'options': ["Yes", "No"], 
 				'variable': self.arrangement_selection, 
 				'command': self.calculate
 			},
-			{'label': "What is your color scheme?",
+			{'label': "What is the color scheme?",
 				'variable': self.color_scheme,
 				'command': self.calculate
 			},
-			{'label': "Would You Like Menu Suggestions?", 
+			{'label': "Menu set up instructions included?", 
 				'options': ["Yes", "No"], 
 				'variable': self.menu_selection, 
 				'command': self.calculate
@@ -189,7 +202,7 @@ class Application(Frame): # Create a class called 'Application' (Which inherits 
 					btn.grid(row = grid_row, column = grid_column, sticky = W) 
 					# If this is the first option, make it the default.
 					if grid_column == 1:
-						btn.select() # This WAS how we made a line default
+						btn.select() # This WAS how I made a line default
 					# Finally, move to the next column so we're ready for the next option
 					grid_column += 1 
 			# Otherwise, if the dictionary has no 'options', it's an Entry
@@ -226,6 +239,7 @@ class Application(Frame): # Create a class called 'Application' (Which inherits 
 		self.text.delete(0.0,END) #delates input after done with it
 		self.text.insert(0.0, message)
 
+	#When the application object is created, run the create_widgets function.
 	def __init__(self,master):
 		Frame.__init__(self, master)
 		self.grid()
@@ -233,8 +247,8 @@ class Application(Frame): # Create a class called 'Application' (Which inherits 
 		#self.configure(background = 'orchid1')#backround nightmare
 
 
+#This is the main function, which creates our application object
 def main():
-	
 	root.title("Party Planner")	# set the title of the window
 	root.geometry("1024x768")# sets size of window
 	root.configure(background = 'orchid1')

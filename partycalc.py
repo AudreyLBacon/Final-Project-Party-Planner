@@ -13,18 +13,7 @@ class PartyCalc(object):   #find out how to connect the answers/button into here
 		self.table_pattern = 0
 		self.tables = 0
 
-		'''
-			elif self.tableshape == "combination" : 
-			rectangle_combo_qty_tables = raw_input(" How many rectangle tables?")
-			round_combo_qty_tables = raw_input("How many round tables ") #button input integers
-			
-			total_combo_tables = rectangle_combo_qty_tables + round_combo_qty_tables
-			combo_chairs_total = rectangle_combo_qty_tables / 6 + round_combo_qty_tables
-			if self.tablesize  == 60 and  self.seating == "Max" and self.tableshape == "Combination":
-					print " total tables needed are ", total_combo_tables, "with", reqtangle_combo_qty, "reqtangle tables and", round_combo_qty, "round tables and."
-			elif self.tablesize == 72:
-					print " total tables needed are ", total_combo_tables, "with", reqtangle_combo_qty, "reqtangle tables and ", round_combo_qty, "round tables and .", (round_combo_qty * 8 ) +  6 
-		'''
+		
 		
 
 	def calculate(self):
@@ -53,6 +42,15 @@ class PartyCalc(object):   #find out how to connect the answers/button into here
 		
 		return textvar
         
+
+
+
+
+
+
+
+
+        
 	def	pattern_and_color(self):#generate sample configs of pattern and color in report.
 	 # info taken from  def questions  and def calc functions and using variables from class
 	# put in a pattern selected or pre selected and add colors to table and centerpiece#	
@@ -71,7 +69,7 @@ class PartyCalc(object):   #find out how to connect the answers/button into here
 		# put all answers in a Party class 
 
 		print ("Welcome to Party Planner. Please answer the questions. If you do not know the answer type 'd' for I don't know. ")
-		self.occasion = raw_input ("What is the party occasion? " )
+		self.occasion = raw_input ("What is the party occasion? " ).title() 
 		print self.occasion
 		self.guests = int(raw_input("How many guests are coming? " )) # use in table method
 		print self.guests
@@ -89,7 +87,7 @@ class PartyCalc(object):   #find out how to connect the answers/button into here
 		print self.tables
 		#If answer is combo then Ask:
 		#print raw_input "how many rectangles and how many rounds?"#new calculation goes to calc def and prints combine calc on page 2 report
-		self.group_seating = raw_input ("Will guests have private table seating or shared table seating?")
+		self.group_seating = raw_input ("Will guests have private table seating or shared table seating?").title() 
 		print  self.group_seating
 		self.tablesize = int(raw_input('Would you like 60" or 72" size round tables? Enter size or zero for suggestions ' )) # use in table method
 		print self.tablesize
