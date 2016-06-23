@@ -1,5 +1,5 @@
 # Final-Project-Party-Planner
-Party Event Tool - calculates set up, food ,includes recipes and shopping lists, tracks employees and guest list filters options.
+Party Event Tool - calculates table and chairs needed per quest qty, size of table, shape of table and seating preferance. Lists printable other information . Has a display window to manipulate options.
 # list of skills used
 Classes methods ,list, Dictionary, for/whileloops, funtions, conditionals ,modules imported, concatonate, type casting, and Tkinter GUI
 
